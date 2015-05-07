@@ -60,7 +60,8 @@ sudo systemctl enable ntpd
 sudo systemctl start ntpd
 sudo mv /etc/profile.d/perlbin.sh /etc/profile.d/perlbin.sh.ORIG
 sudo vim /etc/machine-info # CHASSIS=server
-sudo vim /etc/systemd/resolved.conf # Remove IPv6 entries
+sudo mkdir /etc/systemd/resolved.conf.d
+sudo vim /etc/systemd/resolved.conf.d/default.conf # DNS=8.8.8.8 8.8.4.4
 
 # Bash
 cd ~

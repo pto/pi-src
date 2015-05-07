@@ -1,0 +1,165 @@
+Arch Linux on Raspberry Pi 2
+============================
+
+# Using crouton Jessie:
+sudo apt-get install dosfstools bsdtar
+sudo /sbin/fdisk /dev/sdb
+# o to delete partitions
+# n, p, 1, ENTER, +100M, t, c
+# n, p, 2, ENTER, +1G, t, 2, 82
+# n, p, 3, ENTER, ENTER
+# p, w
+# Eject disks, reseat card, and eject disks again
+sudo /sbin/mkfs.vfat /dev/sdb1
+mkdir boot
+sudo mount /dev/sdb1 boot
+sudo /sbin/mkfs.ext4 /dev/sdb3 # takes a while
+mkdir root
+sudo mount /dev/sdb3 root
+# Download http://archlinuxarm.org/os/ArchLinuxARM-rpi-2-latest.tar.gz
+sudo bsdtar -xpf ~/Downloads/ArchLinuxARM-rpi-2-latest.tar.gz -C root
+sudo sync # takes a while
+sudo mv root/boot/* boot
+sudo vi boot/cmdline.txt # change mmcblk0p2 to p3
+sudo umount boot root
+sudo sync
+# Remove card
+
+# Serial cable: black to 3, white to 4, green to 5
+sudo screen /dev/tty.usbserial 115200 # Exit with CTRL-S CTRL-\
+# Put card in Pi and power up
+
+# Login with root/root
+/sbin/ifconfig # to get IP address
+
+# Login with ssh as root:
+passwd
+vi /etc/pacman.conf # uncomment Color line
+pacman -Syu
+vi /etc/hostname # change to pi
+reboot
+
+pacman -S sudo
+useradd -m pto
+cat <<"EOF" >/etc/sudoers.d/pto
+pto ALL=(ALL) NOPASSWD:ALL
+EOF
+mkdir /home/pto/.ssh
+cat <<"EOF" >/home/pto/.ssh/authorized_keys
+ssh-rsa ....
+EOF
+chown -R pto.pto /home/pto/.ssh
+chmod 700 /home/pto/.ssh
+chmod 600 /home/pto/.ssh/authorized_keys
+
+# Login with ssh as pto:
+sudo pacman -S bc dnsutils exfat-utils fuse-exfat gcc gdb git iw lsof make mlocate ntp sudo tree vim wget wpa_supplicant
+sudo vim /etc/ntp.conf # use time-[abcd].nist.gov
+sudo ntpdate time-a.nist.gov
+sudo systemctl enable ntpd
+sudo systemctl start ntpd
+sudo mv /etc/profile.d/perlbin.sh /etc/profile.d/perlbin.sh.ORIG
+sudo vim /etc/machine-info # CHASSIS=server
+sudo vim /etc/systemd/resolved.conf # Remove IPv6 entries
+
+# Bash
+cd ~
+cat <<"EOF" >>.bashrc
+
+alias vi=vim
+
+# Custom bash prompt via kirsle.net/wizards/ps1.html
+export PS1="\[$(tput bold)\]\[$(tput setaf 4)\]\u@\h \[$(tput setaf 6)\]\W \\$ \[$(tput sgr0)\]"
+
+export GOROOT=/usr/local/go
+export GOPATH=$HOME/go
+export PATH=$PATH:$GOPATH/bin:$GOROOT/bin
+EOF
+
+# Vim
+cd ~
+cat <<"EOF" >.vimrc
+set nobackup
+set tabstop=4
+set shiftwidth=4
+set noexpandtab
+set ruler
+filetype off
+filetype plugin indent off
+set runtimepath+=$HOME/.vim/vim-go
+filetype plugin indent on
+syntax on
+colorscheme ron
+EOF
+
+# Git
+cd ~
+cat <<"EOF" >.gitconfig
+[user]
+        name = Peter Olsen
+        email = pto@me.com
+[push]
+        default = simple
+EOF
+
+top # z, t, m, f, sort by %CPU, y, e, E, W
+
+sudo mkswap -f /dev/mmcblk0p2
+sudo swapon /dev/mmcblk0p2
+sudo vim /etc/fstab # add "/dev/mmcblk0p2 swap swap defaults 0 0"
+
+sudo ln -sf /usr/share/zoneinfo/America/New_York /etc/localtime
+
+sudo vim /etc/locale.gen # uncomment en_US.UTF-8
+sudo locale-gen
+sudo vim /etc/locale.conf # add "LANG=en_US.UTF-8"
+
+sudo vim /etc/motd
+
+# Go
+wget https://storage.googleapis.com/golang/go1.4.2.src.tar.gz
+cd /usr/local
+sudo tar xfz ~/go1.4.2.src.tar.gz
+cd go/src
+sudo ./all.bash
+cd ~
+sudo bash
+. .bashrc
+go get golang.org/x/tools/cmd/godoc
+go get golang.org/x/tools/cmd/vet
+go get github.com/golang/lint/golint
+cp $(which golint) /usr/local/go/bin/
+exit
+mkdir ~/.vim
+git clone https://github.com/fatih/vim-go.git ~/.vim/vim-go
+
+# Wireless manual
+sudo vim /etc/wpa_supplicant/example.conf
+# ctrl_interface=/run/wpa_supplicant
+# update_config=1
+sudo wpa_supplicant -B -i wlan0 -c /etc/wpa_supplicant/example.conf 
+sudo wpa_cli
+# scan
+# scan_results
+# add_network
+# set_network 0 ssid “MYSSID”
+# set_network 0 ask “passphrase”
+# enable_network 0
+# save_config
+# quit
+sudo dhcpcd wlan0
+ifconfig
+
+# Wireless at boot
+sudo vim /etc/wpa_supplicant/wpa_supplicant-wlan0.conf
+# ctrl_interface=/run/wpa_supplicant
+# update_config=1
+sudo bash
+wpa_passphrase MYSSID passphrase >>/etc/wpa_supplicant/wpa_supplicant-wlan0.conf
+exit
+sudo systemctl enable dhcpcd@wlan0
+sudo systemctl start dhcpcd@wlan0
+
+# Add to /boot/config.txt:
+device_tree_param=act_led_trigger=cpu0
+device_tree_param=pwr_led_trigger=mmc0

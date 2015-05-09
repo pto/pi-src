@@ -1,5 +1,5 @@
-	.global _start
+	.global main
 
-_start:
+main:
 	mov	R0, #123
 	bal	second

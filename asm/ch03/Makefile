@@ -1,13 +1,4 @@
 all: 42 2part
 
-2part: first.o second.o
-	ld $^ -o $@
-
-%: %.o
-	ld $< -o $@
-
-%.o: %.s
-	as $< -o $@
-
-clean:
-	rm -f *.o
+2part: first.s second.s
+	cc $^ -o $@

@@ -1,1 +1,1 @@
-all: add32 add128 add128_faster add128_fastest sub64
+all: add32 add128 add128_faster add128_fastest sub64 mul32 mla32

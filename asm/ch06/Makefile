@@ -1,1 +1,1 @@
-all: add32 add128 add128_faster
+all: add32 add128 add128_faster add128_fastest sub64

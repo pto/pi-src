@@ -1,10 +1,10 @@
 @ Add two 128-bit numbers and return lowest byte as exit status
-@ Do it 2^32-1 times, to see if the order of instructions affects the timing
+@ Do it 2^32 times, to see if the order of instructions affects the timing
 @ This version mixes moves with adds to enable the pipeline to fill up
 
 	.global main
 main:
-	mov	r12, #0xFFFFFFFF
+	mov	r12, #0		@ first time through loop becomes 0xFFFFFFFF
 loop:
 	mov	r4, #1
 	mov	r8, #5

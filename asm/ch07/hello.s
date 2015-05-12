@@ -13,5 +13,7 @@ _start:
 
 	.data
 message:
-	.ascii	"Hello, assembly world!\n"
+	.ascii	"Hello, world!\n"
+	.ascii	"This message is coming to you in pure assembly code.\n"
+	.ascii	"Thank the assembler for counting the characters!\n"
 	.set	length, .-message

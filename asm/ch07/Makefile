@@ -1,13 +1,12 @@
 PROGRAMS = hello reply
 
+# Use the command line goal only if it is not equal to "clean"
 ifneq ($(MAKECMDGOALS),)
 	REPLACE_PROGRAMS = yes
 endif
-
 ifeq ($(MAKECMDGOALS),clean)
 	REPLACE_PROGRAMS = no
 endif
-
 ifeq ($(REPLACE_PROGRAMS),yes)
 	PROGRAMS = $(MAKECMDGOALS)
 endif

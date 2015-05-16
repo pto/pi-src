@@ -1,5 +1,21 @@
-all: hello
+PROGRAMS = hello reply
 
-hello: hello.s
-	as -o hello.o hello.s
-	ld -o hello hello.o
+ifneq ($(MAKECMDGOALS),)
+	REPLACE_PROGRAMS = yes
+endif
+
+ifeq ($(MAKECMDGOALS),clean)
+	REPLACE_PROGRAMS = no
+endif
+
+ifeq ($(REPLACE_PROGRAMS),yes)
+	PROGRAMS = $(MAKECMDGOALS)
+endif
+
+all: $(PROGRAMS)
+
+$(PROGRAMS): % : %.o
+	ld -o $@ $<
+
+clean:
+	rm -f *.o $(PROGRAMS)

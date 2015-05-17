@@ -32,7 +32,7 @@ loop:
         blt     loop            @ < 'a'
         cmp     r3, r5
         bgt     loop            @ > 'z'
-        and     r3, r3, #0xDF   @ make it upper case
+        bic     r3, r3, #0x20   @ make it upper case
         strb    r3, [r2]
         b       loop
 done:   

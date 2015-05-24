@@ -1,4 +1,4 @@
-PROGRAMS = hello reply
+PROGRAMS = upper binary
 
 # Use the command line goal only if it is not equal to "clean"
 ifneq ($(MAKECMDGOALS),)

@@ -171,3 +171,5 @@ device_tree_param=pwr_led_trigger=mmc0
 sudo vim /etc/dhcpcd.conf
 # noipv6rs
 # noipv6
+sudo vim /etc/systemd/resolved.conf.d/default.conf
+# add 2001:4860:4860::8888 2001:4860:4860::8844

@@ -166,3 +166,8 @@ sudo systemctl start dhcpcd@wlan0
 # Add to /boot/config.txt:
 device_tree_param=act_led_trigger=cpu0
 device_tree_param=pwr_led_trigger=mmc0
+
+# Remove IPv6 router solicitation:
+sudo vim /etc/dhcpcd.conf
+# noipv6rs
+# noipv6

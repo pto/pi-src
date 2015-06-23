@@ -7,6 +7,7 @@ main(int argc, char *argv[])
 {
 	int a[BUFSIZ];
 	int target;
+    int previous;
 	int i;
 
 	if (argc < 3) {
@@ -14,7 +15,7 @@ main(int argc, char *argv[])
 		return 1;
 	}
 	target = atoi(argv[1]);
-
+    
 	for (i = 0; i < argc - 2; i++) {
 		if (i > BUFSIZ - 1) {
 			printf("binsearch: too many arguments\n");
@@ -22,6 +23,15 @@ main(int argc, char *argv[])
 		}
 		a[i] = atoi(argv[i + 2]);
 	}
+
+    previous = a[0];
+    for (i = 1; i < argc - 2; i++) {
+        if (a[i] < previous) {
+            printf("binsearch: array not sorted\n");
+            return 1;
+        }
+        previous = a[i];
+    }
 
 	printf("%d\n", binsearch(target, a, argc - 1));
 

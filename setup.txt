@@ -2,7 +2,7 @@ Arch Linux on Raspberry Pi 2
 ============================
 
 # Using crouton Jessie:
-sudo apt-get install dosfstools bsdtar
+sudo apt-get install dosfstools bsdtar screen
 sudo /sbin/fdisk /dev/sdb
 # o to delete partitions
 # n, p, 1, ENTER, +100M, t, c

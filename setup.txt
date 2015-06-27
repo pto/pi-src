@@ -5,7 +5,7 @@ Arch Linux on Raspberry Pi 2
 sudo apt-get install dosfstools bsdtar screen
 sudo /sbin/fdisk /dev/sdb
 # o to delete partitions
-# n, p, 1, ENTER, +100M, t, c
+# n, p, 1, ENTER, +100M, t, 1, c
 # n, p, 2, ENTER, +1G, t, 2, 82
 # n, p, 3, ENTER, ENTER
 # p, w

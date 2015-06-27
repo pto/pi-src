@@ -27,9 +27,26 @@ sudo sync
 
 # Serial cable: black to 3, white to 4, green to 5
 sudo screen /dev/tty.usbserial 115200 # Exit with CTRL-S CTRL-\
-# Put card in Pi and power up
+# Put card in Pi, connect Ethernet, and power up
 
 # Login with root/root
+passwd
+vi /etc/pacman.conf # uncomment Color line
+pacman -Syu
+vi /etc/hostname # change to pi
+reboot
+
+
+
+
+
+
+
+
+
+
+
+
 /sbin/ifconfig # to get IP address
 
 # Login with ssh as root:

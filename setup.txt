@@ -31,31 +31,23 @@ sudo screen /dev/tty.usbserial 115200 # Exit with CTRL-S CTRL-\
 
 # Login with root/root
 passwd
-vi /etc/pacman.conf # uncomment Color line
+vi /etc/pacman.conf # uncomment Color line, and comment out aur
 pacman -Syu
+pacman -S dialog wpa_supplicant
 vi /etc/hostname # change to pi
+# disconnect Ethernet
+# insert Edimax wifi adapter
 reboot
 
+wifi-menu
+# accept wlan0-HOME-33A2 as profile name
+netctl start wlan0-HOME-33A2
+netctl enable wlan0-HOME-33A2
+reboot
 
-
-
-
-
-
-
-
-
-
-
-/sbin/ifconfig # to get IP address
+ifconfig # to get IP address
 
 # Login with ssh as root:
-passwd
-vi /etc/pacman.conf # uncomment Color line
-pacman -Syu
-vi /etc/hostname # change to pi
-reboot
-
 pacman -S sudo
 useradd -m pto
 cat <<"EOF" >/etc/sudoers.d/pto
@@ -70,9 +62,7 @@ chmod 700 /home/pto/.ssh
 chmod 600 /home/pto/.ssh/authorized_keys
 
 # Login with ssh as pto:
-sudo vim /etc/pacman.conf # comment out aur
-sudo pacman -Syu
-sudo pacman -S base-devel bc dialog dnsutils exfat-utils fuse-exfat gdb git iw lsof mlocate ntp tree unzip vim wget wireless_tools wpa_supplicant
+sudo pacman -S base-devel bc exfat-utils fuse-exfat gdb git iw lsof mlocate ntp tree unzip vim wget 
 sudo vim /etc/ntp.conf # use time-[abcd].nist.gov
 sudo ntpdate time-a.nist.gov
 sudo systemctl enable ntpd
@@ -122,7 +112,7 @@ cat <<"EOF" >.gitconfig
         default = simple
 EOF
 
-top # z, t, m, f, sort by %CPU, y, e, E, W
+top # z, t, m, R, f, sort by %CPU, y, e, E, W
 
 sudo mkswap -f /dev/mmcblk0p2
 sudo swapon /dev/mmcblk0p2
@@ -135,6 +125,17 @@ sudo locale-gen
 sudo vim /etc/locale.conf # add "LANG=en_US.UTF-8"
 
 sudo vim /etc/motd
+
+sudo vim /boot/config.txt:
+# Add the following:
+device_tree_param=act_led_trigger=cpu0
+device_tree_param=pwr_led_trigger=mmc0
+
+sudo reboot
+
+###################################################################
+# ARCHIVE MATERIAL
+###################################################################
 
 # Go
 wget https://storage.googleapis.com/golang/go1.4.2.src.tar.gz

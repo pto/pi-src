@@ -62,7 +62,8 @@ chmod 700 /home/pto/.ssh
 chmod 600 /home/pto/.ssh/authorized_keys
 
 # Login with ssh as pto:
-sudo pacman -S base-devel bc exfat-utils fuse-exfat gdb git iw lsof mlocate ntp tree unzip vim wget 
+sudo pacman -S base-devel bc exfat-utils fuse-exfat gdb git iw lsof mlocate ntp pkgfile tree unzip vim wget 
+sudo pkgfile --update
 sudo vim /etc/ntp.conf # use time-[abcd].nist.gov
 sudo ntpdate time-a.nist.gov
 sudo systemctl enable ntpd

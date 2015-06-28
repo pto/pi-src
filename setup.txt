@@ -132,6 +132,8 @@ sudo vim /boot/config.txt:
 device_tree_param=act_led_trigger=cpu0
 device_tree_param=pwr_led_trigger=mmc0
 
+sudo vim /etc/ssh/sshd_config # Uncomment "UseDNS no"
+
 sudo reboot
 
 ###################################################################
